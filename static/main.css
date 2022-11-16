@@ -1,0 +1,34 @@
+#voice-form{
+    width: 30vw;
+    height: 10vh;
+}
+
+main {
+    position: relative;
+    width: 100vh;
+    height: 100vw;
+}
+
+body {
+    overflow-y: hidden; /* Hide vertical scrollbar */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+  }
+
+h2{
+    text-align: right;
+}
+
+.box{
+    position: absolute;
+    margin: 30px;
+    padding: 20px;
+}
+
+#box-1{
+    left: 20%;
+}
+
+#box-2{
+    top: 38%;
+    left: 50%;
+}
