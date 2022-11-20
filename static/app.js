@@ -20,6 +20,14 @@ window.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem(name, JSON.stringify(new_data))
     console.log(name + ": " + localStorage.getItem(name))
     input.value = ''
+    //HOW TO MAKE API CALL FROM HERE
+    // fetch('/store', {
+    //   Method: 'POST',
+    //   Headers: {
+    //     Accept: 'application.json',
+    //     'Content-Type': 'application/json'
+    //   },
+    // })
   });
   fileInput.onchange = () => {
     num += 1
