@@ -1,13 +1,5 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Subway Surfers Reader</title>
-        <link rel="s">
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="../static/main.css">
-        <script type="module" src="../static/app.js"></script>
-    </head>
     <body style="background-color:cornflowerblue">
         <main>
           <div class="box" id="box-1">
@@ -25,4 +17,79 @@
           </div>
         </main>
     </body>
+    <head>
+      <title>Subway Surfers Reader</title>
+      <link rel="s">
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="static/main.css">
+      <script>
+        let num = 0
+      async function doPut(text_input) {
+        console.log('in doPut function')
+        const rawResponse = await fetch('http://127.0.0.1:5000/text/' + num, {
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({text: text_input})
+        });
+        console.log('waiting for content')
+        const content = await rawResponse.json();
+        console.log(content)
+        console.log(text_input)
+        const second_response = await doGet()
+        console.log(second_response)
+      }
+      async function doGet(){
+    fetch('http://127.0.0.1:5000/text/' + num).then(response => response.json()).then(data => console.log(data))
+    console.log('successful getting')
+}
+      window.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('my_form');
+        const fileInput = document.getElementById('file-upload')
+          console.log('DOMContentLoaded')
+        form.addEventListener('submit', event => {
+          num += 1
+          event.preventDefault()
+          console.log(event)
+          const input = document.getElementById('voice-form');
+          console.log('text submitted!!')
+          const new_data = {
+            text: input.value
+          }
+          const name = 'storedItem' + num
+          localStorage.setItem(name, JSON.stringify(new_data))
+          console.log(name + ": " + localStorage.getItem(name))
+          input.value = ''
+          console.log('calling doPut')
+          doPut(new_data.text)
+        });
+        fileInput.onchange = () => {
+          num += 1
+          console.log('Michael waz here')
+          console.log('here before')
+          console.log('The number of items in localStorage is ' + localStorage.length)
+          for(let i = 0; i < localStorage.length; i++){
+            console.log('element ' + i + ' has JSON vaue of')
+            console.log(localStorage.getItem('storedItem' + i))
+          }
+          console.log('here')
+          console.log('FILE UPLOAD')
+        //I should parse the file here and send it ->
+          const selectedFile = fileInput.files[0];
+          console.log(selectedFile);
+          const new_data = {
+            has_pdf: false,
+            pdf_name: selectedFile.name,
+            text: null
+          }
+          const name = 'storedItem' + num
+          localStorage.setItem(name, JSON.stringify(new_data))
+          console.log(name + ' is ' + localStorage.getItem(name))
+      }
+      });
+      </script>
+  </head>
 </html>

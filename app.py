@@ -2,10 +2,23 @@ from gtts import gTTS
 import os
 from flask import Flask, render_template, url_for, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_restful import Api, Resource, reqparse, abort, fields
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+api = Api(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
+
+dummy_data_structure = dict()
+text_put_args = reqparse.RequestParser()
+text_put_args.add_argument("text", type=str, help="The text entered in from the page", required=True)
+
+def convert_text_speech(input, id):
+    myobj = gTTS(text=input, lang='en', slow=False)
+    myobj.save(str(id) + '.mp3')
+    os.system("mpg321 " + str(id) + ".mp3")
+    return str(id) + ".mp3"
+
 
 @app.route('/', methods=['GET'])
 def index():
@@ -20,17 +33,30 @@ def index():
 class DataModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # treat has_pdf as a boolean
-    has_pdf = db.Column(db.Integer, default=0)
-    pdf_name = db.Column(db.String(100))
     text = db.Column(db.String(1000))
+
+class Text(Resource):
+    def get(self, text_id):
+        print('ing the text_id')
+        print(text_id)
+        if text_id not in dummy_data_structure.keys():
+            print('Not have')
+            return None
+        else:
+            print('found it')
+            return dummy_data_structure[text_id]
+
+    def put(self, text_id):
+        print('printing the text_id')
+        print(text_id)
+        args = text_put_args.parse_args()
+        print('printing the args')
+        print(args)
+        print('calling the magic')
+        dummy_data_structure[text_id] = convert_text_speech(args['text'], text_id)
+        return args['text']
+
+api.add_resource(Text, '/text/<int:text_id>')
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-# def convert_text_speech():
-#     mytext = """My husband (m35) and I (f39) are separated. Our oldest (f4) looks a lot like me and according to my husband she has the same personality. I had bad things happen to me when I was younger(20's) and my husband knows about it. He never blamed me for what happened but he thinks I'm too trusting and "naive, his word" and that it was used against me. My husband started worrying about our daughter when she turned 3 and her personality started showing. He started making observations about our daughter being very calm and kind and too trusting. That people are going to take advantage of her. That she will have what happened to me happen to her too. He hates that she is trusting. Her kindergarten teacher says that she is very kind and fairly liked by her peers but that she is very laid back and doesn't take much space. she doest want to be in the center on attention and her psychologist says that she has healthy boundaries and is a happy child.
-#     Even after talking her her  He insists that he should have the children more. I understand where he is coming from but I just don't want it to have negative effects on her. I don't know how to feel about this. how can I tell my 4 years old that her feelings and suspicions about her father are wrong when they are right?
-#     """
-#     myobj = gTTS(text=mytext, lang='en', slow=False)
-#     myobj.save('reddit.mp3')
-#     os.system("mpg321 reddit.mp3")
