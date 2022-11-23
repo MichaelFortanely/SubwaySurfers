@@ -9,6 +9,16 @@ main {
     height: 100vw;
 }
 
+h1{
+    text-align: right;
+    font-size: 50px;
+}
+
+#title{
+    position: relative;
+    left: 100px;
+}
+
 body {
     overflow-y: hidden; /* Hide vertical scrollbar */
     overflow-x: hidden; /* Hide horizontal scrollbar */
@@ -26,9 +36,17 @@ h2{
 
 #box-1{
     left: 20%;
+    top: 10px;
 }
 
 #box-2{
     top: 38%;
     left: 50%;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 17vh;
 }

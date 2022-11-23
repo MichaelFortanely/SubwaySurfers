@@ -24,35 +24,15 @@ def convert_text_speech(input, id):
 def index():
     return render_template('index.html')
 
-# const new_data = {
-#       has_pdf: false,
-#       pdf_name: selectedFile.name,
-#       text: null
-#     }
-# JSON Model shown above
-class DataModel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    # treat has_pdf as a boolean
-    text = db.Column(db.String(1000))
-
 class Text(Resource):
     def get(self, text_id):
-        print('ing the text_id')
-        print(text_id)
         if text_id not in dummy_data_structure.keys():
-            print('Not have')
             return None
         else:
-            print('found it')
             return dummy_data_structure[text_id]
 
     def put(self, text_id):
-        print('printing the text_id')
-        print(text_id)
         args = text_put_args.parse_args()
-        print('printing the args')
-        print(args)
-        print('calling the magic')
         dummy_data_structure[text_id] = convert_text_speech(args['text'], text_id)
         return args['text']
 
